@@ -8,7 +8,7 @@
             $notification_count = auth()->user()->unreadNotifications()->count();
         @endphp
         <li class="nav-item dropdown border-left">
-            <a class="nav-link count-indicator read-notification" id="notificationDropdown" href="{{route('admin.notification.list')}}">
+            <a class="nav-link count-indicator dropdown-toggle read-notification" id="notificationDropdown" href="#" data-toggle="dropdown">
                 <i class="mdi mdi-bell"></i>
                 @if ($notification_count)
                   <span class="count bg-danger"></span>
@@ -34,10 +34,10 @@
         </li>
 
         <li class="nav-item dropdown">
-          <a class="nav-link" id="profileDropdown" href="#" data-bs-toggle="dropdown">
+          <a class="nav-link" id="profileDropdown" href="#" data-toggle="dropdown">
             <div class="navbar-profile">
 
-              <img class="img-xs rounded-circle" src={{userImageById(authId())}} alt="User profile picture">
+              <img class="img-xs rounded-circle" src="" alt="User profile picture">
               
               <p class="mb-0 d-none d-sm-block navbar-profile-name">{{UserNameById(authId(  ))}}</p>
               <i class="mdi mdi-menu-down d-none d-sm-block"></i>

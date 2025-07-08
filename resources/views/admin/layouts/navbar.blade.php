@@ -1,18 +1,10 @@
 <!-- partial:partials/_sidebar.html -->
-<style>
-.menu-arrow {
-    transition: transform 0.3s ease;
-}
 
-.menu-arrow.rotate {
-    transform: rotate(180deg);
-}
-</style>
  <nav class="sidebar sidebar-offcanvas" id="sidebar">
     <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
       <a class="sidebar-brand brand-logo" href="{{route('admin.dashboard')}}">
         {{-- <img src="{{asset('admin/images/logo.svg')}}" alt="logo" /> --}}
-        <h1 style="color:white">EDUPLAZ</h1>
+        <h1 style="color:white">TELEDOC</h1>
       </a>
       <a class="sidebar-brand brand-logo-mini" href="{{route('admin.dashboard')}}"><img src="{{asset('admin/images/logo-mini.svg')}}" alt="logo" /></a>
     </div>
@@ -22,7 +14,7 @@
           <a href="{{route('admin.profile')}}">
             <div class="profile-pic">
               <div class="count-indicator">
-                <img class="img-xs rounded-circle" src = {{userImageById(authId())}} alt="User profile picture">
+                <img class="img-xs rounded-circle" src ="" alt="User profile picture">
                 <span class="count bg-success"></span>
               </div>
               <div class="profile-name">
@@ -45,12 +37,12 @@
 
       <!-- Profile Link -->
       <li class="nav-item menu-items {{ request()->routeIs('admin.profile', 'admin.changePassword') ? 'active' : '' }}">
-        <a class="nav-link {{ request()->routeIs('admin.profile', 'admin.changePassword') ? '' : 'collapsed' }}" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="{{ request()->routeIs('admin.profile', 'admin.changePassword') ? 'true' : 'false' }}" aria-controls="ui-basic">
+        <a class="nav-link {{ request()->routeIs('admin.profile', 'admin.changePassword') ? '' : 'collapsed' }}" data-toggle="collapse" href="#ui-basic" aria-expanded="{{ request()->routeIs('admin.profile', 'admin.changePassword') ? 'true' : 'false' }}" aria-controls="ui-basic">
             <span class="menu-icon">
                 <i class="mdi mdi-settings"></i>
             </span>
             <span class="menu-title">Settings</span>
-            <i class="menu-arrow mdi mdi-chevron-down"></i>
+            <i class="menu-arrow"></i>
         </a>
         <div class="collapse {{ request()->routeIs('admin.profile', 'admin.changePassword') ? 'show' : '' }}" id="ui-basic" data-id="{{ request()->routeIs('admin.profile', 'admin.changePassword') ? 'true' : 'false' }}">
             <ul class="nav flex-column sub-menu">
@@ -65,90 +57,47 @@
       </li>
 
       <!-- User Management Link -->
-      <li class="nav-item menu-items {{ (request()->routeIs('admin.user.*') && !request()->routeIs('admin.user.trashed.list')) ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('admin.user.list') }}">
+      <li class="nav-item menu-items {{ (request()->routeIs('admin.user.*')) ? 'active' : '' }}">
+        <a class="nav-link {{ request()->routeIs('admin.doctor.list', 'admin.patient.list') ? '' : 'collapsed' }}" data-toggle="collapse" href="#ui-users" aria-expanded="{{ request()->routeIs('admin.doctor.list', 'admin.patient.list') ? 'true' : 'false' }}" aria-controls="ui-users">
             <span class="menu-icon">
                 <i class="mdi mdi-contacts"></i>
             </span>
             <span class="menu-title">User Management</span>
-        </a>
-      </li>
-      
-       <!-- User Management Link -->
-       <li class="nav-item menu-items {{ request()->routeIs('admin.user.trashed.list') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('admin.user.trashed.list') }}">
-            <span class="menu-icon">
-                <i class="mdi mdi-contacts"></i>
-            </span>
-            <span class="menu-title">Trashed User</span>
-        </a>
-      </li>
-
-      <li class="nav-item menu-items {{ (request()->routeIs('admin.avatar*') && !request()->routeIs('admin.user.trashed.list')) ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('admin.avatar.list') }}">
-            <span class="menu-icon">
-                <i class="mdi mdi-contacts"></i>
-            </span>
-            <span class="menu-title">Avatar Management</span>
-        </a>
-      </li>
-      <li class="nav-item menu-items {{ request()->routeIs('admin.newsletter.*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('admin.newsletter.index') }}">
-            <span class="menu-icon">
-                <i class="mdi mdi-contacts"></i>
-            </span>
-            <span class="menu-title">Newsletter Subscribers</span>
-        </a>
-      </li>
-      
-      <li class="nav-item menu-items {{ request()->routeIs('admin.announcements.*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('admin.announcements.index') }}">
-            <span class="menu-icon">
-                <i class="mdi mdi-contacts"></i>
-            </span>
-            <span class="menu-title">Announcements</span>
-        </a>
-      </li>
-
-      <li class="nav-item menu-items {{ request()->routeIs('admin.category.*', 'admin.subcategory.*') ? 'active' : '' }}">
-        <a class="nav-link {{ request()->routeIs('admin.category.list', 'admin.subcategory.list') ? '' : 'collapsed' }}" data-bs-toggle="collapse" href="#category-tab" aria-expanded="{{ request()->routeIs('admin.category.list', 'admin.subcategory.list') ? 'true' : 'false' }}" aria-controls="category-tab">
-            <span class="menu-icon">
-                <i class="mdi mdi-contacts"></i>
-            </span>
-            <span class="menu-title">Subject</span>
             <i class="menu-arrow"></i>
         </a>
-        <div class="collapse {{ request()->routeIs('admin.category.list', 'admin.subcategory.list') ? 'show' : '' }}" id="category-tab" data-id="{{ request()->routeIs('admin.category.list', 'admin.subcategory.list') ? 'true' : 'false' }}">
+        <div class="collapse {{ request()->routeIs('admin.doctor.list', 'admin.patient.list') ? 'show' : '' }}" id="ui-users" data-id="{{ request()->routeIs('admin.doctor.list', 'admin.patient.list') ? 'true' : 'false' }}">
             <ul class="nav flex-column sub-menu">
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('admin.category.list') ? 'active' : '' }}" href="{{ route('admin.category.list') }}">Categories</a>
+                    <a class="nav-link {{ request()->routeIs('admin.doctor.list') ? 'active' : '' }}" href="{{ route('admin.doctor.list') }}">Doctors</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('admin.subcategory.list') ? 'active' : '' }}" href="{{ route('admin.subcategory.list') }}">SubCategories</a>
+                    <a class="nav-link {{ request()->routeIs('admin.patient.list') ? 'active' : '' }}" href="{{ route('admin.patient.list') }}">Patients</a>
                 </li>
             </ul>
         </div>
       </li>
 
-       {{-- <li class="nav-item menu-items {{ request()->routeIs('admin.category.*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('admin.category.list') }}">
-            <span class="menu-icon">
-                <i class="mdi mdi-contacts"></i>
-            </span>
-            <span class="menu-title">Subject</span>
-        </a>
-      </li> --}}
 
-       <li class="nav-item menu-items {{ request()->routeIs('admin.language.*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('admin.language.list') }}">
+      <!-- Banner Management Link -->
+      <li class="nav-item menu-items {{ request()->routeIs('admin.banner.*') ? 'active' : '' }}">
+        <a class="nav-link" href="">
             <span class="menu-icon">
-                <i class="mdi mdi-contacts"></i>
+                <i class="mdi mdi-barcode-scan"></i>
             </span>
-            <span class="menu-title">Language</span>
+            <span class="menu-title">Banner Management</span>
         </a>
       </li>
       
-   
+      <!-- Order Management Link -->
+      <li class="nav-item menu-items {{ request()->routeIs('admin.order.*') ? 'active' : '' }}">
+        <a class="nav-link" href="">
+            <span class="menu-icon">
+                <i class="mdi mdi-barcode-scan"></i>
+            </span>
+            <span class="menu-title">Order Management</span>
+        </a>
+      </li>      
+
       <!-- Notification Management Link -->
       <li class="nav-item menu-items {{ request()->routeIs('admin.notification.*') ? 'active' : '' }}">
         <a class="nav-link" href="{{route('admin.notification.list')}}">
@@ -161,7 +110,7 @@
       
       <!-- Content Pages Link -->
       <li class="nav-item menu-items {{ request()->routeIs('admin.contentPages.*') ? 'active' : '' }}">
-        <a class="nav-link {{ request()->routeIs('admin.contentPages.*') ? '' : 'collapsed' }}" data-bs-toggle="collapse" href="#auth3" aria-expanded="{{ request()->routeIs('admin.card.*', 'admin.category.*') ? 'true' : 'false' }}" aria-controls="auth3">
+        <a class="nav-link {{ request()->routeIs('admin.contentPages.*') ? '' : 'collapsed' }}" data-toggle="collapse" href="#auth3" aria-expanded="{{ request()->routeIs('admin.card.*', 'admin.category.*') ? 'true' : 'false' }}" aria-controls="auth3">
             <span class="menu-icon">
                 <i class="mdi mdi-content-save"></i>
             </span>
@@ -194,27 +143,10 @@
             </ul>
         </div>
       </li>
-      <!-- Helpdesk Link -->
-      {{--<li class="nav-item menu-items {{ request()->routeIs('admin.helpDesk.*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('admin.helpDesk.list',['type' => 'open']) }}">
-            <span class="menu-icon">
-                <i class="mdi mdi-desktop-mac"></i>
-            </span>
-            <span class="menu-title">Helpdesk</span>
-        </a>
-      </li>--}}
-       <li class="nav-item menu-items {{ request()->routeIs('admin.contact.*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('admin.contact.list') }}">
-            <span class="menu-icon">
-                <i class="mdi mdi-desktop-mac"></i>
-            </span>
-            <span class="menu-title">Contact us</span>
-        </a>
-      </li>
 
       <!-- Config setting Link -->
       <li class="nav-item menu-items {{ request()->routeIs('admin.config-setting.*') ? 'active' : '' }}">
-        <a class="nav-link {{ request()->routeIs('admin.config-setting.*') ? '' : 'collapsed' }}" data-bs-toggle="collapse" href="#auth1" aria-expanded="{{ request()->routeIs('admin.config-setting.*') ? 'true' : 'false' }}" aria-controls="auth1">
+        <a class="nav-link {{ request()->routeIs('admin.config-setting.*') ? '' : 'collapsed' }}" data-toggle="collapse" href="#auth1" aria-expanded="{{ request()->routeIs('admin.config-setting.*') ? 'true' : 'false' }}" aria-controls="auth1">
             <span class="menu-icon">
                 <i class="mdi mdi-settings"></i>
             </span>
@@ -226,11 +158,15 @@
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('admin.config-setting.smtp') ? 'active' : '' }}" href="{{ route('admin.config-setting.smtp') }}">SMTP Information</a>
                 </li>
+                {{-- <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.config-setting.stripe') ? 'active' : '' }}" href="{{ route('admin.config-setting.stripe') }}">Stripe Information</a>
+                </li> --}}
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('admin.config-setting.config') ? 'active' : '' }}" href="{{ route('admin.config-setting.config') }}">Social Information</a>
+                  <a class="nav-link {{ request()->routeIs('admin.config-setting.paypal') ? 'active' : '' }}" href="{{ route('admin.config-setting.paypal') }}">PayPal Information</a>
                 </li>
-              
-                
+                <li class="nav-item">
+                  <a class="nav-link {{ request()->routeIs('admin.config-setting.config') ? 'active' : '' }}" href="{{ route('admin.config-setting.config') }}">General Information</a>
+              </li>
             </ul>
         </div>
       </li>
@@ -247,28 +183,3 @@
     </ul>
   </nav>
   <!-- partial -->
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-<script>
-  $(document).ready(function () {
-    $('.nav-link').on('click', function () {
-    const $arrow = $(this).find('.menu-arrow');
-    
-    // Defer checking the class after Bootstrap processes the collapse toggle
-    setTimeout(() => {
-        if ($(this).hasClass('collapsed')) {
-          $arrow.removeClass('rotate');
-        } else {
-          $arrow.addClass('rotate');
-        }
-      }, 10); // 10ms delay ensures Bootstrap has updated the class
-    });
-      
-       @if(request()->routeIs('admin.profile', 'admin.changePassword'))
-       $('#ui-basic').collapse('show');
-       $('#ui-basic').prev('.nav-link').find('.menu-arrow').addClass('rotate');
-      @endif
-  });
-  </script>
