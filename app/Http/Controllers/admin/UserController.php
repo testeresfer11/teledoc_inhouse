@@ -65,18 +65,97 @@ class UserController extends Controller
      * createdDate  : 31-05-2024
      * purpose      : add the user
     */
-    public function add(Request $request){
+    public function addDoctor(Request $request){
         try{
             if($request->isMethod('get')){
-                return view("admin.user.add");
+                return view("admin.doctor.add");
             }elseif( $request->isMethod('post') ){
                 $validator = Validator::make($request->all(), [
-                    'first_name'    => 'required|string|max:255',
-                    'last_name'     => 'required|string|max:255',
-                    'email'         => 'required|unique:users,email|email:rfc,dns',
-                    'profile'       => 'image|max:2048',
-                    'gender'        => 'required|in:Male,Female,Other',
-                    'password'      => 'min:6'
+                    'name'        => 'required|string|max:255',
+                    'email'       => 'required|unique:users,email|email:rfc,dns',
+                    'mobile_no'   => 'required|min:10',
+                    'profile_pic' => 'image|max:2048',
+                    'gender'      => 'required',
+                ]);
+                
+                if ($validator->fails()) {
+                    return redirect()->back()->withErrors($validator)->withInput();
+                }
+                if($request->filled('password')){
+                    $password = $request->password;
+                }else{
+                    $password = generateRandomString();
+                }
+                $user = User::Create([
+                    'role_id'           => 3,
+                    'name'              => $request->name,
+                    'email'             => $request->email,
+                    'country'           => 'India',
+                    'country_code'      => '+91',
+                    'mobile_no'         => $request->mobile_no,
+                    'email_verified_at' => date('Y-m-d H:i:s')
+                ]);
+
+                $ImgName = User::find(authId())->doctorDetail->profile_pic;
+                if ($request->hasFile('profile_pic')) {
+                    $ImgName = uploadFile($request->file('profile_pic'),'images/');
+                }
+
+                $ICimg = User::find(authId())->doctorDetail->ic_pic;
+                if ($request->hasFile('profile_pic')) {
+                    $ImgName = uploadFile($request->file('profile_pic'),'images/user-documents');
+                }
+
+                $Eduimg = User::find(authId())->doctorDetail->education;
+                if ($request->hasFile('education')) {
+                    $ImgName = uploadFile($request->file('education'),'images/user-documents');
+                }
+
+                $Licenseimg = User::find(authId())->doctorDetail->medical_license;
+                if ($request->hasFile('medical_license')) {
+                    $ImgName = uploadFile($request->file('medical_license'),'images/user-documents');
+                }
+
+                DoctorDetail::create([
+                    'doctor_id'         => $user->id,
+                    'present_address'   => $request->address ? $request->address :'',
+                    'permanent_address' => $request->alt_address ? $request->alt_address :'',
+                    'profile_pic'       => $ImgName,
+                    'ic_pic'            => $ICimg,
+                    'education'         => $Eduimg,
+                    'gender'            => $request->gender,
+                    'current_wokplace'  => $request->current_workplace ? $request->current_workplace :'',
+                    'birth_date'        => $request->birth_date ? $request->birth_date :'',
+                ]);
+
+
+                $template = $this->getTemplateByName('Account_detail');
+                if( $template ) { 
+                    $stringToReplace    = ['{{$name}}','{{$password}}','{{$email}}'];
+                    $stringReplaceWith  = [$user->full_name,$password ,$user->email];
+                    $newval             = str_replace($stringToReplace, $stringReplaceWith, $template->template);
+                    $emailData          = $this->mailData($user->email, $template->subject, $newval, 'Account_detail', $template->id);
+                    $this->mailSend($emailData);
+                }
+
+                return redirect()->route('admin.doctor.list')->with('success','Doctor '.config('constants.SUCCESS.ADD_DONE'));
+            }
+        }catch(\Exception $e){
+            return redirect()->back()->with("error", $e->getMessage());
+        }
+    }
+    /**End method add**/
+
+    public function addPatient(Request $request){
+        try{
+            if($request->isMethod('get')){
+                return view("admin.patient.add");
+            }elseif( $request->isMethod('post') ){
+                $validator = Validator::make($request->all(), [
+                    'name'        => 'required|string|max:255',
+                    'email'       => 'required|unique:users,email|email:rfc,dns',
+                    'profile_pic' => 'image|max:2048',
+                    'gender'      => 'required|in:Male,Female,Other',
                 ]);
                 
                 if ($validator->fails()) {
@@ -92,7 +171,6 @@ class UserController extends Controller
                     'first_name'        => $request->first_name,
                     'last_name'         => $request->last_name,
                     'email'             => $request->email,
-                    'password'          => Hash::make($password),
                     'is_email_verified' => 1,
                     'email_verified_at' => date('Y-m-d H:i:s')
                 ]);
@@ -124,13 +202,12 @@ class UserController extends Controller
                     $this->mailSend($emailData);
                 }
 
-                return redirect()->route('admin.user.list')->with('success','User '.config('constants.SUCCESS.ADD_DONE'));
+                return redirect()->route('admin.doctor.list')->with('success','Doctor '.config('constants.SUCCESS.ADD_DONE'));
             }
         }catch(\Exception $e){
             return redirect()->back()->with("error", $e->getMessage());
         }
     }
-    /**End method add**/
 
     /**
      * functionName : view
@@ -140,7 +217,7 @@ class UserController extends Controller
     public function view($id){
         try{
             $user = User::findOrFail($id);
-            return view("admin.user.view",compact("user"));
+            return view("admin.doctor.view",compact("user"));
         }catch(\Exception $e){
             return redirect()->back()->with("error", $e->getMessage());
         }
@@ -190,7 +267,7 @@ class UserController extends Controller
                     'country_short_code' => $request->country_short_code ? $request->country_short_code :'',
                     'dob'                => $request->dob ? $request->dob :'',
                 ]);
-                return redirect()->route('admin.user.list')->with('success','User '.config('constants.SUCCESS.UPDATE_DONE'));
+                return redirect()->route('admin.doctor.list')->with('success','User '.config('constants.SUCCESS.UPDATE_DONE'));
             }
         }catch(\Exception $e){
             return redirect()->back()->with("error", $e->getMessage());

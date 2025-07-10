@@ -45,11 +45,12 @@ if(!function_exists('authUserPlanType')){
  * createdDate  : 30-05-2024
  * purpose      : Get the role name with the user Id
 */
-if(!function_exists('getRoleNameById')){
-    function getRoleNameById($id){
+if (!function_exists('getRoleNameById')) {
+    function getRoleNameById($id)
+    {
         $user = User::find($id);
-        if($user){
-            return $user->role->name;
+        if ($user && $user->roles->isNotEmpty()) {
+            return $user->roles->first()->name;
         }
         return null;
     }
@@ -96,9 +97,9 @@ if(!function_exists('deviceTypeById')){
 */
 if(!function_exists('userNameById')){
     function userNameById($id){
-        $user = User::where('id',$id)->withTrashed()->first();
+        $user = User::where('id',$id)->first();
         if($user){
-            return ($user->first_name ?? '' ).' '.($user->last_name ?? '') ;
+            return ($user->name ?? '' );
         }
         return '';
     }

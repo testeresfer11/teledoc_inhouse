@@ -14,7 +14,10 @@
           <a href="{{route('admin.profile')}}">
             <div class="profile-pic">
               <div class="count-indicator">
-                <img class="img-xs rounded-circle" src ="" alt="User profile picture">
+              <img class="img-xs rounded-circle" 
+                  src="{{ $user->profile_image ? asset('uploads/'.$user->profile_image) : asset('admin/images/faces/face24.jpg') }}" 
+                  alt="User profile picture">
+
                 <span class="count bg-success"></span>
               </div>
               <div class="profile-name">

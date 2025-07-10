@@ -20,6 +20,7 @@ class AuthController extends Controller
      * purpose      : logged in form submit user
     */
     public function login(Request $request){
+       
         try{
             if($request->isMethod('get')){
                 if(auth()->check()){
@@ -32,18 +33,17 @@ class AuthController extends Controller
                 $validator = Validator::make($request->all(), [
                     'email'     => ['required','email',
                                  Rule::exists('users', 'email')],
-                     'password'  => 'required|min:8'
+                     'password'  => 'required'
                  ]);
                  if ($validator->fails()) {
                     return redirect()->back()->with('error',$validator->errors()->first());
                  }
 
                 $user = User::where('email', strtolower($request->email))->first();
+                
     
-                $role = getRoleNameById($user->id);
-    
-                if($role == "user")
-                    return redirect()->back()->with( "error", 'Invalid role! You are not a ' . $role);
+                if($user->role_id != 1)
+                    return redirect()->back()->with( "error", 'Invalid role! You have have not permission to access this dashboard');
     
                 $credentials = $request->only('email', 'password');
                 $remember = $request->has('remember');
@@ -54,6 +54,7 @@ class AuthController extends Controller
             }
 
         }catch(\Exception $e){
+            
             return redirect()->back()->with("error", $e->getMessage());
         }
     }

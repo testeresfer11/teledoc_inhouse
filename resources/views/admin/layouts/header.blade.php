@@ -37,7 +37,7 @@
           <a class="nav-link" id="profileDropdown" href="#" data-toggle="dropdown">
             <div class="navbar-profile">
 
-              <img class="img-xs rounded-circle" src="" alt="User profile picture">
+              <img class="img-xs rounded-circle" src="{{ $user->profile_image ? asset('uploads/'.$user->profile_image) : asset('admin/images/faces/face24.jpg') }}" alt="User profile picture">
               
               <p class="mb-0 d-none d-sm-block navbar-profile-name">{{UserNameById(authId(  ))}}</p>
               <i class="mdi mdi-menu-down d-none d-sm-block"></i>

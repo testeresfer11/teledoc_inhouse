@@ -5,7 +5,7 @@
   <div class="card col-lg-4 mx-auto">
     <div class="card-body px-5 py-5">
       <h3 class="card-title text-left mb-3">{{ __('Login') }}</h3>
-        {{-- <x-alert /> --}}
+     <x-alert /> 
       <form action="{{ route('login') }}" method="POST" id="loginForm">
           @csrf
           <div class="form-group">

@@ -35,7 +35,7 @@ Route::group(['prefix' =>'admin'],function () {
             Route::group(['prefix' =>'doctor'],function () {
                 Route::name('doctor.')->controller(UserController::class)->group(function () {
                     Route::get('list','getDoctorList')->name('list');
-                    Route::match(['get', 'post'],'add','add')->name('add');
+                    Route::match(['get', 'post'],'add','addDoctor')->name('add');
                     Route::get('view/{id}','view')->name('view');
                     Route::match(['get', 'post'],'edit/{id}','edit')->name('edit');
                     Route::get('delete/{id}','delete')->name('delete');
@@ -47,7 +47,7 @@ Route::group(['prefix' =>'admin'],function () {
             Route::group(['prefix' =>'patient'],function () {
                 Route::name('patient.')->controller(UserController::class)->group(function () {
                     Route::get('list','getPatientList')->name('list');
-                    Route::match(['get', 'post'],'add','add')->name('add');
+                    Route::match(['get', 'post'],'add','addPatient')->name('add');
                     Route::get('view/{id}','view')->name('view');
                     Route::match(['get', 'post'],'edit/{id}','edit')->name('edit');
                     Route::get('delete/{id}','delete')->name('delete');
