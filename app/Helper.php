@@ -188,25 +188,19 @@ if (!function_exists('readNotification')) {
  Purpose:     Upload Files
  Params:      $request,$path
 */  
-if(!function_exists('uploadFile'))
-{
+if (!function_exists('uploadFile')) {
     function uploadFile($file, $path)
     {
         if ($file) {
-            // $ext      = $file->getClientOriginalExtension();
-            // $filename = Carbon::now()->format('YmdHis') . '_' . rand(00000, 99999) . '.' . $ext;
-            // $file->move(public_path('images'), $filename);
-
-            // // $result   = Storage::disk('public')->putFileAs($path, $file, $filename);
-            // return $filename ? $filename : false;
-
             $imageName = time().'.'.$file->getClientOriginalExtension();  
-            $file->storeAs('public/'.$path, $imageName);
-            return $imageName ? $imageName : false;
+            $storedPath = $file->storeAs('private/' . $path, $imageName); // store in private
+
+            return $storedPath ? $storedPath : false; // store full path: 'private/images/patients/1720616495.jpg'
         }
         return false;
     }
 }
+
 
 /*
  Method Name: Delete Files

@@ -101,6 +101,42 @@
     <!-- Custom js -->
     <script src="{{asset('admin/cstm-js/custom.js')}}"></script>
     <!-- endcustom -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBZ09dtOd8YHF_ZCbfbaaMHJKiOr26noY8&libraries=places&callback=initAutocomplete" async defer></script>
+
+
+    <script>
+function initAutocomplete() {
+    const input = document.getElementById('present_address');
+    const input2 = document.getElementById('permanent_address');
+
+    if (!input) {
+        console.error('present_address input not found!');
+        return;
+    }
+    if (!input2) {
+        console.error('permanent_address input not found!');
+        return;
+    }
+
+    const autocomplete = new google.maps.places.Autocomplete(input);
+    const autocomplete2 = new google.maps.places.Autocomplete(input2);
+
+    autocomplete.addListener('place_changed', function () {
+        const place = autocomplete.getPlace();
+        if (!place.geometry) return;
+
+        document.getElementById('pat_lat').value = place.geometry.location.lat();
+        document.getElementById('pat_long').value = place.geometry.location.lng();
+    });
+
+    autocomplete2.addListener('place_changed', function () {
+        const place = autocomplete2.getPlace(); // ✅ FIXED: use autocomplete2
+        if (!place.geometry) return;
+
+      
+    });
+}
+</script>
 
 
     <script>

@@ -89,7 +89,7 @@
         }).then((result) => {
           if (result.isConfirmed) {
               $.ajax({
-                  url: "/admin/user/delete/" + user_id,
+                  url: "/admin/patient/delete/" + user_id,
                   type: "GET", 
                   success: function(response) {
                     if (response.status == "success") {

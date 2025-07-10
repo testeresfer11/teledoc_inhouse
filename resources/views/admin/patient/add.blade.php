@@ -105,9 +105,11 @@
             @enderror
 
             <div class="col-md-12 mt-3">
-                <label>Present Address</label>
-                <textarea name="present_address" class="form-control">{{ old('present_address') }}</textarea>
-            </div>
+        <label>Present Address</label>
+    <input type="text" id="present_address" name="present_address" class="form-control" value="{{ old('present_address') }}">
+    </div>
+    <input type="hidden" name="pat_lat" id="pat_lat" value="{{ old('pat_lat') }}">
+    <input type="hidden" name="pat_long" id="pat_long" value="{{ old('pat_long') }}">
 
             @error('present_address')
             <span class="invalid-feedback" role="alert">
@@ -117,8 +119,7 @@
 
             <div class="col-md-12 mt-3">
                 <label>Permanent Address</label>
-                <textarea name="permanent_address" class="form-control">{{ old('permanent_address') }}</textarea>
-            </div>
+                <input type="text" id="permanent_address" name="permanent_address" class="form-control" value="{{ old('permanent_address') }}">            </div>
             @error('permanent_address')
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>

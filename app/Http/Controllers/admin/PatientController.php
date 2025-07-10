@@ -85,6 +85,8 @@ class PatientController extends Controller
                     'gender'            => $request->gender,
                     'birth_date'        => $request->birth_date,
                     'present_address'   => $request->present_address,
+                    'pat_lat'           =>$request->pat_lat,
+                    'pat_long'           =>$request->pat_long,
                     'permanent_address' => $request->permanent_address,
                     'image'             => $imagePath,
                     'id_proof'          => $idProofPath,
@@ -118,14 +120,15 @@ class PatientController extends Controller
      * purpose      : Get the detail of specific user
      */
     public function view($id)
-    {
-        try {
-            $user = User::findOrFail($id);
-            return view("admin.doctor.view", compact("user"));
-        } catch (\Exception $e) {
-            return redirect()->back()->with("error", $e->getMessage());
-        }
+{
+    try {
+        $user = User::with('patientDetail')->findOrFail($id);
+       
+        return view("admin.patient.view", compact("user"));
+    } catch (\Exception $e) {
+        return redirect()->back()->with("error", $e->getMessage());
     }
+}
     /**End method view**/
 
     /**
@@ -134,49 +137,74 @@ class PatientController extends Controller
      * purpose      : edit the user detail
      */
     public function edit(Request $request, $id)
-    {
-        try {
-            if ($request->isMethod('get')) {
-                $user = User::find($id);
-                return view("admin.user.edit", compact('user'));
-            } elseif ($request->isMethod('post')) {
-                $validator = Validator::make($request->all(), [
-                    'first_name'    => 'required|string|max:255',
-                    'last_name'     => 'required|string|max:255',
-                    'email'         => 'required|email:rfc,dns',
-                    'profile'       => 'image|max:2048'
-                ]);
-                if ($validator->fails()) {
-                    return redirect()->back()->withErrors($validator)->withInput();
-                }
-                User::where('id', $id)->update([
-                    'first_name'        => $request->first_name,
-                    'last_name'         => $request->last_name,
-                ]);
-
-                $user = User::find($id);
-                $ImgName = $user->userDetail ? $user->userDetail->profile : '';
-                if ($request->hasFile('profile')) {
-                    deleteFile($ImgName, 'images/');
-                    $ImgName = uploadFile($request->file('profile'), 'images/');
-                }
-
-                UserDetail::updateOrCreate(['user_id' => $id], [
-                    'phone_number'      => $request->phone_number ? $request->phone_number : '',
-                    'address'           => $request->address ? $request->address : '',
-                    'zip_code'          => $request->zip_code ? $request->zip_code : '',
-                    'profile'           => $ImgName,
-                    'country_code'      => $request->country_code ? $request->country_code : '',
-                    'gender'            => $request->gender ? $request->gender : '',
-                    'country_short_code' => $request->country_short_code ? $request->country_short_code : '',
-                    'dob'                => $request->dob ? $request->dob : '',
-                ]);
-                return redirect()->route('admin.doctor.list')->with('success', 'User ' . config('constants.SUCCESS.UPDATE_DONE'));
-            }
-        } catch (\Exception $e) {
-            return redirect()->back()->with("error", $e->getMessage());
+{
+    try {
+        if ($request->isMethod('get')) {
+            $user = User::with('patientDetail')->findOrFail($id);
+            return view("admin.patient.edit", compact('user'));
         }
+
+        // POST request (update logic)
+        $validator = Validator::make($request->all(), [
+            'name'              => 'required|string|max:255',
+            'email'             => 'required|email:rfc,dns|unique:users,email,' . $id,
+            'mobile_no'         => 'nullable|string|max:20',
+            'country_code'      => 'nullable|string|max:10',
+            'gender'            => 'required|in:1,2,3',
+            'birth_date'        => 'nullable|date',
+            'profile_pic'       => 'nullable|image|max:2048',
+            'id_proof'          => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:4096',
+            'present_address'   => 'nullable|string',
+            'permanent_address' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $user = User::findOrFail($id);
+        $user->update([
+            'name'         => $request->name,
+            'email'        => $request->email,
+            'mobile_no'    => $request->mobile_no,
+            'country_code' => $request->country_code,
+        ]);
+
+        $patient = $user->patientDetail;
+
+        // Handle file uploads
+        $imagePath = $patient && $request->hasFile('image')
+            ? uploadFile($request->file('image'), 'images/patients/', $patient->image)
+            : ($patient->image ?? null);
+
+        $idProofPath = $patient && $request->hasFile('id_proof')
+            ? uploadFile($request->file('id_proof'), 'documents/id_proof/', $patient->id_proof)
+            : ($patient->id_proof ?? null);
+
+        // Update or create patient detail
+        PatientDetail::updateOrCreate(
+            ['user_id' => $user->id],
+            [
+                'gender'             => $request->gender,
+                'birth_date'         => $request->birth_date,
+                'present_address'    => $request->present_address,
+                'permanent_address'  => $request->permanent_address,
+                'pat_lat'            => $request->pat_lat,
+                'pat_long'           => $request->pat_long,
+                'image'              => $imagePath,
+                'id_proof'           => $idProofPath,
+                'mobile_no'          => $request->mobile_no,
+                'country_code'       => $request->country_code,
+                'updated_by'         => auth()->id(),
+            ]
+        );
+
+        return redirect()->route('admin.patient.list')->with('success', 'Patient ' . config('constants.SUCCESS.UPDATE_DONE'));
+    } catch (\Exception $e) {
+        return redirect()->back()->with("error", $e->getMessage());
     }
+}
+
     /**End method edit**/
 
     /**
