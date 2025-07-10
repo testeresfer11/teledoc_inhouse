@@ -23,23 +23,26 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $appends = ['full_name'];
-    protected $fillable = [
+       protected $fillable = [
         'role_id',
-        'first_name',
-        'last_name',
+        'name',
         'email',
-        'device_token',
-        'device_type',
         'password',
-        'is_email_verified',
-        'customer_id',
-        'card_number',
-        'plan_type',
-        'theme',
-        'day_count',
-        'is_notified',
-        'scratched_date',
-        'default'
+        'country',
+        'country_code',
+        'mobile_no',
+        'chat_token',
+        'stripe_cust_id',
+        'admin_approve',
+        'is_notification',
+        'current_language',
+        'timezone',
+        'reject_reason',
+        'is_insurance',
+        'notification_sound',
+        'android_version',
+        'ios_version',
+        'created_by'
     ];
 
     /**
@@ -68,29 +71,8 @@ class User extends Authenticatable
     {
         return ucwords("{$this->first_name} {$this->last_name}");
     }
-    public function role(): BelongsTo
-    {
-        return $this->BelongsTo(Role::class);
-    }
+   
 
-    public function userDetail(): HasOne
-    {
-        return $this->HasOne(UserDetail::class);
-    }
-
-    public function questionResponse(): HasMany
-    {
-        return $this->HasMany(QuestionResponse::class,'user_id','id');
-    }
-
-    public function categoriesOrder(): HasMany
-    {
-        return $this->HasMany(Order::class,'user_id','id')->where('board_type','customized')->whereNotNull('payment_id');
-    }
-
-    public function personalizedOrder(): HasMany
-    {
-        return $this->HasMany(Order::class,'user_id','id')->where('board_type','personalized')->whereNotNull('payment_id');
-    }
+    
 
 }

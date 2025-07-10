@@ -30,7 +30,6 @@ return [
     ],
     "ROLES"     => [
         "ADMIN"     => "admin",
-        "USER"      => "user",
         "DOCTOR"    => "doctor",
         "PATIENT"   => "patient",
     ],

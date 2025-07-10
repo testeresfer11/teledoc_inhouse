@@ -16,7 +16,11 @@ class DatabaseSeeder extends Seeder
         $this->call([
 
             RoleTableSeeder::class,
-            AdminUserSeeder::class,        
+            AdminSeeder::class,
+            ConfigSettingTableSeeder::class,
+            EmailTemplateSeeder::class,
+            ContentPageSeeder::class,
+            ConfigSettingTableSeeder::class,
         ]);
     }
 }

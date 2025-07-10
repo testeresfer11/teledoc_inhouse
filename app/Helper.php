@@ -96,7 +96,7 @@ if(!function_exists('deviceTypeById')){
 */
 if(!function_exists('userNameById')){
     function userNameById($id){
-        $user = User::where('id',$id)->first();
+        $user = User::where('id',$id)->withTrashed()->first();
         if($user){
             return ($user->first_name ?? '' ).' '.($user->last_name ?? '') ;
         }
@@ -125,17 +125,16 @@ if(!function_exists('convertDate')){
  * createdDate  : 04-06-2024
  * purpose      : To get the userImage by id
 */
-/*if(!function_exists('userImageById')){
+if(!function_exists('userImageById')){
     function userImageById($id){
        $user =  User::find($id);
 
-       if(isset($user->userDetail) && !is_null($user->userDetail->profile) && file_exists(public_path('storage/images/' .$user->userDetail->profile)))
-            return  asset('storage/images/' . $user->userDetail->profile) ;
+       if($user &&!is_null($user->profile_pic))
+            return  $user->profile_pic ;
         else
-            return asset('admin/images/faces/face15.jpg');
+            return asset('images/user_dummy.png');
     }
-}*/
-
+}
 /** end methd userImageById */
 
 /*
