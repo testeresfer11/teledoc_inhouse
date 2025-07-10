@@ -1,13 +1,13 @@
 @extends('admin.layouts.app')
-@section('title', 'Doctors')
+@section('title', 'Patients')
 @section('breadcrum')
 <div class="page-header">
-    <h3 class="page-title">Doctors</h3>
+    <h3 class="page-title">Patients</h3>
     <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item "><a href="{{route('admin.dashboard')}}">Dashboard</a></li>
-        <li class="breadcrumb-item " aria-current="page">User Management</li>
-        <li class="breadcrumb-item " aria-current="page">Doctors</li>
+        <li class="breadcrumb-item" aria-current="page">User Management</li>
+        <li class="breadcrumb-item active" aria-current="page">Patients</li>
     </ol>
     </nav>
 </div>
@@ -18,14 +18,14 @@
       <div class="card">
         <div class="card-body">
           <div class="d-flex justify-content-between">
-            <h4 class="card-title">Doctor Management</h4>
+            <h4 class="card-title">Patient Management</h4>
             
               <div class="admin-filters">
                 <x-filter />
               </div>
 
-              <a href="{{route('admin.doctor.add')}}"><button type="button" class="btn default-btn btn-md">
-                <span class="menu-icon">+ Add Doctor</span></button></a>
+              <a href="{{route('admin.patient.add')}}"><button type="button" class="btn default-btn btn-md">
+                <span class="menu-icon">+ Add Patient</span></button></a>
           </div>
           <div class="table-responsive">
             <table class="table table-striped">
@@ -38,20 +38,20 @@
                 </tr>
               </thead>
               <tbody>
-                @forelse ($doctors as $user)
+                @forelse ($patients as $user)
                   <tr data-id="{{$user->id}}">
                     <td class="py-1">
-                      <img src="{{userImageById($user->id)}}" onerror="this.src = '{{ asset('admin/images/faces/face15.jpg') }}'"
+                      <img src="{{ asset('admin/images/faces/face15.jpg') }}" onerror="this.src = '{{ asset('admin/images/faces/face15.jpg') }}'"
                       alt="User profile picture">
                     </td>
                     <td> {{$user->name}} </td>
                     <td>{{$user->email}}</td>
                     <td> 
                       <span class="menu-icon">
-                        <a href="{{route('admin.user.view',['id' => $user->id])}}" title="View" class="text-primary"><i class="mdi mdi-eye"></i></a>
+                        <a href="{{route('admin.patient.view',['id' => $user->id])}}" title="View" class="text-primary"><i class="mdi mdi-eye"></i></a>
                       </span>&nbsp;&nbsp;&nbsp;
                       <span class="menu-icon">
-                        <a href="{{route('admin.user.edit',['id' => $user->id])}}" title="Edit" class="text-success"><i class="mdi mdi-pencil"></i></a>
+                        <a href="{{route('admin.patient.edit',['id' => $user->id])}}" title="Edit" class="text-success"><i class="mdi mdi-pencil"></i></a>
                       </span>&nbsp;&nbsp;
                       <span class="menu-icon">
                         <a href="#" title="Delete" class="text-danger deleteUser" data-id="{{$user->id}}"><i class="mdi mdi-delete"></i></a>
@@ -67,7 +67,7 @@
             </table>
           </div>
             <div class="custom_pagination">
-              {{ $doctors->appends(request()->query())->links('pagination::bootstrap-4') }}
+              {{ $patients->appends(request()->query())->links('pagination::bootstrap-4') }}
             </div>
         </div>
       </div>

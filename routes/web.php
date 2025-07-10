@@ -47,6 +47,11 @@ Route::group(['prefix' =>'admin'],function () {
             Route::group(['prefix' =>'patient'],function () {
                 Route::name('patient.')->controller(UserController::class)->group(function () {
                     Route::get('list','getPatientList')->name('list');
+                    Route::match(['get', 'post'],'add','add')->name('add');
+                    Route::get('view/{id}','view')->name('view');
+                    Route::match(['get', 'post'],'edit/{id}','edit')->name('edit');
+                    Route::get('delete/{id}','delete')->name('delete');
+                    Route::get('changeStatus','changeStatus')->name('changeStatus');
                 });
             });
 
