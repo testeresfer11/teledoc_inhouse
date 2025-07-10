@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\admin\{AuthController, CategoryController, ConfigSettingController, DashboardController, HelpDeskController, TransactionController, UserController,BannerController,CardController, ManageFAQController, QuestionController,QuestionnaireManagementController,ContentPageController, NotificationController, OrderController, PlanManagementController, ScratchedCardController};
+use App\Http\Controllers\admin\{AuthController, CategoryController,PatientController, ConfigSettingController, DashboardController, HelpDeskController, TransactionController, UserController,BannerController,CardController, ManageFAQController, QuestionController,QuestionnaireManagementController,ContentPageController, NotificationController, OrderController, PlanManagementController, ScratchedCardController};
 use App\Http\Controllers\admin\PreQuestionController;
 use Illuminate\Support\Facades\Route;
 
@@ -45,7 +45,7 @@ Route::group(['prefix' =>'admin'],function () {
 
             // Manage patient routes
             Route::group(['prefix' =>'patient'],function () {
-                Route::name('patient.')->controller(UserController::class)->group(function () {
+                Route::name('patient.')->controller(PatientController::class)->group(function () {
                     Route::get('list','getPatientList')->name('list');
                     Route::match(['get', 'post'],'add','addPatient')->name('add');
                     Route::get('view/{id}','view')->name('view');

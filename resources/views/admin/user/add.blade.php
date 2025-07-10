@@ -30,11 +30,7 @@
                     <div class="col-6">
                         <label for="exampleInputFirstName">First Name</label>
                         <input type="text" class="form-control @error('first_name') is-invalid @enderror" id="exampleInputFirstName" placeholder="First Name" name="first_name">
-                        @error('first_name')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
+                       
                     </div>
                     <div class="col-6">
                         <label for="exampleInputLastName">Last Name</label>

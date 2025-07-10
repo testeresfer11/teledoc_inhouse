@@ -71,7 +71,10 @@ class User extends Authenticatable
     {
         return ucwords("{$this->namespace} ");
     }
-   
+    public function patientDetail()
+    {
+        return $this->hasOne(PatientDetail::class, 'user_id');
+    }
 
     
 
