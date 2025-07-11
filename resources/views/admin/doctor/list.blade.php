@@ -24,7 +24,7 @@
                 <x-filter />
               </div>
 
-              <a href="{{route('admin.doctor.add')}}"><button type="button" class="btn default-btn btn-md">
+              <a href="{{route('admin.doctor.add-doctor')}}"><button type="button" class="btn default-btn btn-md">
                 <span class="menu-icon">+ Add Doctor</span></button></a>
           </div>
           <div class="table-responsive">
@@ -48,10 +48,10 @@
                     <td>{{$user->email}}</td>
                     <td> 
                       <span class="menu-icon">
-                        <a href="{{route('admin.user.view',['id' => $user->id])}}" title="View" class="text-primary"><i class="mdi mdi-eye"></i></a>
+                        <a href="{{route('admin.doctor.view',['id' => $user->id])}}" title="View" class="text-primary"><i class="mdi mdi-eye"></i></a>
                       </span>&nbsp;&nbsp;&nbsp;
                       <span class="menu-icon">
-                        <a href="{{route('admin.user.edit',['id' => $user->id])}}" title="Edit" class="text-success"><i class="mdi mdi-pencil"></i></a>
+                        <a href="{{route('admin.doctor.edit',['id' => $user->id])}}" title="Edit" class="text-success"><i class="mdi mdi-pencil"></i></a>
                       </span>&nbsp;&nbsp;
                       <span class="menu-icon">
                         <a href="#" title="Delete" class="text-danger deleteUser" data-id="{{$user->id}}"><i class="mdi mdi-delete"></i></a>
@@ -89,7 +89,7 @@
         }).then((result) => {
           if (result.isConfirmed) {
               $.ajax({
-                  url: "/admin/user/delete/" + user_id,
+                  url: "/admin/doctor/delete/" + user_id,
                   type: "GET", 
                   success: function(response) {
                     if (response.status == "success") {

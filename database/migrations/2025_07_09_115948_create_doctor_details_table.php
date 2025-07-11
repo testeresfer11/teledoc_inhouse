@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('doctor_details', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('doctor_id');
+            $table->unsignedBigInteger('user_id');
             $table->text('present_address')->nullable();
             $table->text('permanent_address')->nullable();
             $table->string('latitude')->nullable();
@@ -55,6 +55,7 @@ return new class extends Migration
             $table->string('rcc_no')->nullable();
             $table->string('timezone')->default('Asia/Kolkata');
             $table->text('medical_license')->nullable();
+            $table->string('medical_certificate')->nullable();
             $table->text('profile_link')->nullable();
             $table->timestamps();
         });

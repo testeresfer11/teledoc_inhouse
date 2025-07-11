@@ -2,7 +2,7 @@
 @section('styles')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@23.6.1/build/css/intlTelInput.css">
 @endsection
-@section('title', 'Add Doctor')
+@section('title', 'Edit Doctor')
 @section('breadcrum')
 <div class="page-header">
     <h3 class="page-title"> Doctors</h3>
@@ -11,7 +11,7 @@
         <li class="breadcrumb-item "><a href="{{route('admin.dashboard')}}">Dashboard</a></li>
         <li class="breadcrumb-item " aria-current="page">User Management</li>
         <li class="breadcrumb-item"><a href="{{route('admin.doctor.list')}}">Doctors</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Add Doctor</li>
+        <li class="breadcrumb-item active" aria-current="page">Edit Doctor</li>
       </ol>
     </nav>
 </div>
@@ -22,16 +22,16 @@
       <div class="col-12 grid-margin stretch-card">
         <div class="card">
           <div class="card-body">
-            <h4 class="card-title">Add Doctor</h4>
+            <h4 class="card-title">Edit Doctor</h4>
              
-            <form class="forms-sample" action="{{route('admin.doctor.add-doctor')}}" method="POST" enctype="multipart/form-data">
+            <form class="forms-sample" action="{{route('admin.doctor.edit',['id' => $user->id])}}" method="POST" enctype="multipart/form-data">
               @csrf
               <h5 class="mt-3 mb-3">Doctor Details</h5>
               <div class="form-group">
                 <div class="row">
                     <div class="col-6">
                         <label for="exampleInputFirstName">Full Name</label>
-                        <input type="text" class="form-control @error('name') is-invalid @enderror" id="exampleInputFirstName" placeholder="Full Name" name="name">
+                        <input type="text" class="form-control @error('name') is-invalid @enderror" id="exampleInputFirstName" placeholder="Full Name" name="name" value="{{$user->name ?? ''}}">
                         @error('name')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -40,7 +40,7 @@
                     </div>
                     <div class="col-6">
                         <label for="exampleInputEmail">Email address</label>
-                        <input type="email" class="form-control  @error('email') is-invalid @enderror" id="exampleInputEmail" placeholder="Email" name="email">
+                        <input type="email" class="form-control  @error('email') is-invalid @enderror" id="exampleInputEmail" placeholder="Email" name="email" value="{{$user->email ?? ''}}">
                         @error('email')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -53,7 +53,7 @@
                 <div class="row">
                     <div class="col-6 select_country_code">
                         <label for="exampleInputPhone">Phone Number</label>
-                        <input type="tel" class="form-control @error('mobile_no') is-invalid @enderror" id="phone" placeholder="Phone Number" name="mobile_no" value="">
+                        <input type="tel" class="form-control @error('mobile_no') is-invalid @enderror" id="phone" placeholder="Phone Number" name="mobile_no" value="{{$user->mobile_no ?? ''}}">
                         <input type="hidden" name="country_code" value="">
                         <!--<input type="hidden" name="country_short_code" value="ghs">-->
                         @error('phone')
@@ -64,11 +64,11 @@
                     </div>
                     <div class="col-6">
                         <label for="exampleInputGender">Gender</label>
-                        <select name="gender" id="exampleInputGender" class="form-control  @error('gender') is-invalid @enderror" >
+                        <select name="gender" id="exampleInputGender" class="form-control @error('gender') is-invalid @enderror">
                             <option value="">Select Gender</option>
-                            <option value="1">Male</option>
-                            <option value="2">Female</option>
-                            <option value="3">Other</option>
+                            <option value="1" {{ $user->doctorDetail->gender == '1' ? 'selected' : '' }}>Male</option>
+                            <option value="2" {{ $user->doctorDetail->gender == '2' ? 'selected' : '' }}>Female</option>
+                            <option value="3" {{ $user->doctorDetail->gender == '3' ? 'selected' : '' }}>Other</option>
                         </select>
                         @error('gender')
                             <span class="invalid-feedback" role="alert">
@@ -116,7 +116,7 @@
                 <div class="row">
                     <div class="col-6">
                         <label for="birth_date">Date Of Birth</label>
-                        <input type="date" class="form-control @error('birth_date') is-invalid @enderror" id="birth_date"  name ="birth_date" max="{{ \Carbon\Carbon::yesterday()->format('Y-m-d') }}">
+                        <input type="date" class="form-control @error('birth_date') is-invalid @enderror" id="birth_date"  name ="birth_date" max="{{ \Carbon\Carbon::yesterday()->format('Y-m-d') }}" value="{{ old('birth_date', isset($user->doctorDetail->birth_date) ? \Carbon\Carbon::parse($user->doctorDetail->birth_date)->format('Y-m-d') : '') }}">
                         @error('birth_date')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -125,7 +125,7 @@
                     </div>
                     <div class="col-6">
                         <label for="address">Residential Address</label>
-                        <input type="text" class="form-control @error('address') is-invalid @enderror" id="address" placeholder="Residential Address" name = "address">
+                        <input type="text" class="form-control @error('address') is-invalid @enderror" id="address" placeholder="Residential Address" name = "address" value="{{$user->doctorDetail->present_address ?? ''}}">
                         @error('address')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -139,7 +139,7 @@
                 <div class="row">
                     <div class="col-6">
                         <label for="address">Correspondence Address</label>
-                        <textarea class="form-control @error('alt_address') is-invalid @enderror" id="alt_address" placeholder="Correspondence Address" name = "alt_address" rows="3" cols="3"></textarea>
+                        <textarea class="form-control @error('alt_address') is-invalid @enderror" id="alt_address" placeholder="Correspondence Address" name = "alt_address" rows="3" cols="3">{{$user->doctorDetail->permanent_address ?? ''}}</textarea>
                         @error('alt_address')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -148,7 +148,7 @@
                     </div>
                     <div class="col-6">
                         <label for="exampleInputCountry">Country</label>
-                        <input type="text" class="form-control @error('country') is-invalid @enderror" id="exampleInputCountry" placeholder="Country" name="country">
+                        <input type="text" class="form-control @error('country') is-invalid @enderror" id="exampleInputCountry" placeholder="Country" name="country" value="{{$user->country ?? ''}}">
                         @error('country')
                           <span class="invalid-feedback" role="alert">
                               <strong>{{ $message }}</strong>
@@ -160,9 +160,9 @@
               <div class="form-group">
                 <div class="row">
                     <div class="col-6">
-                        <label for="education">Education</label>
-                        <textarea class="form-control @error('education') is-invalid @enderror" id="education" placeholder="Education" name = "education" cols="3" rows="3"></textarea>
-                        @error('education')
+                        <label for="education-qualification">Education</label>
+                        <textarea class="form-control @error('education_qualification') is-invalid @enderror" id="education_qualification" placeholder="Education" name = "education_qualification" cols="3" rows="3">{{ $user->doctorDetail->education_qualification ?? ''}}</textarea>
+                        @error('education_qualification')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
@@ -170,7 +170,7 @@
                     </div>
                     <div class="col-6">
                         <label for="exampleInputworkplace">Current Workplace</label>
-                        <textarea class="form-control @error('current_workplace') is-invalid @enderror" id="exampleInputworkplace" placeholder="Current Workplace" name="current_workplace" cols="3" rows="3"></textarea>
+                        <textarea class="form-control @error('current_workplace') is-invalid @enderror" id="exampleInputworkplace" placeholder="Current Workplace" name="current_workplace" cols="3" rows="3">{{ $user->doctorDetail->current_wokplace ?? '' }}</textarea>
                         @error('current_workplace')
                           <span class="invalid-feedback" role="alert">
                               <strong>{{ $message }}</strong>
@@ -184,7 +184,7 @@
                 <div class="row">
                     <div class="col-6">
                         <label for="about">About Dr.</label>
-                        <textarea class="form-control @error('about') is-invalid @enderror" id="about" placeholder="About Dr." name = "about" cols="3" rows="3"></textarea>
+                        <textarea class="form-control @error('about') is-invalid @enderror" id="about" placeholder="About Dr." name = "about" cols="3" rows="3">{{ $user->doctorDetail->about ?? '' }}</textarea>
                         @error('about')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -193,7 +193,7 @@
                     </div>
                     <div class="col-6">
                         <label for="exampleInputMedical">Medical Certificate Number</label>
-                        <input type="text" class="form-control @error('medical_certificate') is-invalid @enderror" id="exampleInputMedical" placeholder="Medical Certificate Number" name="medical_certificate">
+                        <input type="text" class="form-control @error('medical_certificate') is-invalid @enderror" id="exampleInputMedical" placeholder="Medical Certificate Number" name="medical_certificate" value="{{ $user->doctorDetail->medical_certificate ?? '' }}">
                         @error('medical_certificate')
                           <span class="invalid-feedback" role="alert">
                               <strong>{{ $message }}</strong>
@@ -207,7 +207,7 @@
                 <div class="row">
                     <div class="col-6">
                         <label for="clinicInterest">Clinic Interest</label>
-                        <textarea class="form-control @error('clinic_interest') is-invalid @enderror" id="clinic_interest" placeholder="Clinic Interest" name = "clinic_interest" cols="3" rows="3"></textarea>
+                        <textarea class="form-control @error('clinic_interest') is-invalid @enderror" id="clinic_interest" placeholder="Clinic Interest" name = "clinic_interest" cols="3" rows="3">{{ $user->doctorDetail->clinic_interest ?? '' }}</textarea>
                         @error('clinic_interest')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -216,7 +216,7 @@
                     </div>
                     <div class="col-6">
                         <label for="exampleInputAppointment">Appointment Description</label>
-                        <textarea class="form-control @error('appointment_description') is-invalid @enderror" id="exampleInputAppointment" placeholder="Appointment Description" name="appointment_description" cols="3" rows="3"></textarea>
+                        <textarea class="form-control @error('appointment_description') is-invalid @enderror" id="exampleInputAppointment" placeholder="Appointment Description" name="appointment_description" cols="3" rows="3">{{ $user->doctorDetail->appointment_description ?? '' }}</textarea>
                         @error('appointment_description')
                           <span class="invalid-feedback" role="alert">
                               <strong>{{ $message }}</strong>
@@ -296,13 +296,13 @@
               <div class="form-group">
                 <div class="row">
                     <div class="col-2">
-                        <input type="checkbox" name="is_chat" id="is_chat"><label class="service-label" for="chat">Chat Service</label>
+                        <input type="checkbox" name="is_chat" id="is_chat" {{ old('is_chat', $user->doctorDetail->is_chat ?? false) ? 'checked' : '' }}><label class="service-label" for="chat">Chat Service</label>
                     </div>
                     <div class="col-2">
-                        <input type="checkbox" name="is_video" id="is_video"><label class="service-label" for="video">Video Service</label>
+                        <input type="checkbox" name="is_video" id="is_video" {{ old('is_video', $user->doctorDetail->is_video ?? false) ? 'checked' : '' }}><label class="service-label" for="video">Video Service</label>
                     </div>
                     <div class="col-2">
-                        <input type="checkbox" name="is_clinic" id="is_clinic"><label class="service-label" for="clinic">Clinic Service</label>
+                        <input type="checkbox" name="is_clinic" id="is_clinic" {{ old('is_clinic', $user->doctorDetail->is_clinic ?? false) ? 'checked' : '' }}><label class="service-label" for="clinic">Clinic Service</label>
                     </div>
                 </div>
 
@@ -313,30 +313,30 @@
                             <div class="col-6 chat-fees">
                                 <h5 class="mt-3 mb-3">Chat</h5>
                                 <label for="first-time">First Time</label>
-                                <input type="number" name="chat_first_time" step="0.01" class="form-control" placeholder="GHS"><br>
+                                <input type="number" name="chat_first_time" step="0.01" class="form-control" placeholder="GHS" value="{{ $user->doctorDetail->chat_first_time ?? '' }}"><br>
                                 <label for="follow-up">Follow Up</label>
-                                <input type="number" name="chat_follow_up" step="0.01" class="form-control" placeholder="GHS">
+                                <input type="number" name="chat_follow_up" step="0.01" class="form-control" placeholder="GHS" value="{{ $user->doctorDetail->chat_follow_up ?? '' }}">
                             </div>
                             <div class="col-6 video-fees">
                                 <h5 class="mt-3 mb-3">Video</h5>
                                 <label for="first-time">First Time</label>
-                                <input type="number" name="video_first_time" step="0.01" class="form-control" placeholder="GHS"><br>
+                                <input type="number" name="video_first_time" step="0.01" class="form-control" placeholder="GHS" value="{{ $user->doctorDetail->video_first_time ?? '' }}"><br>
                                 <label for="follow-up">Follow Up</label>
-                                <input type="number" name="video_follow_up" step="0.01" class="form-control" placeholder="GHS">
+                                <input type="number" name="video_follow_up" step="0.01" class="form-control" placeholder="GHS" value="{{ $user->doctorDetail->video_follow_up ?? '' }}">
                             </div>
                             <div class="col-6 clinic-fees">
                                 <h5 class="mt-3 mb-3">Clinic</h5>
                                 <label for="first-time">First Time</label>
-                                <input type="number" name="clinic_fee" step="0.01" class="form-control" placeholder="GHS"><br>
+                                <input type="number" name="clinic_fee" step="0.01" class="form-control" placeholder="GHS" value="{{ $user->doctorDetail->clinic_fee ?? '' }}"><br>
                                 <label for="follow-up">Follow Up</label>
-                                <input type="number" name="clinic_follow_up" step="0.01" class="form-control" placeholder="GHS">
+                                <input type="number" name="clinic_follow_up" step="0.01" class="form-control" placeholder="GHS" value="{{ $user->doctorDetail->clinic_follow_up ?? '' }}">
                             </div>
                         </div>
                     </div>
                 </div>
               </div>
 
-              <button type="submit" class="btn btn-primary mr-2">Add</button>
+              <button type="submit" class="btn btn-primary mr-2">Update</button>
               {{-- <button class="btn btn-dark">Cancel</button> --}}
             </form>
           </div>
